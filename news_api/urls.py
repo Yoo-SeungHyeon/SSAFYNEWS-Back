@@ -8,5 +8,9 @@ urlpatterns = [
     path('newspage/<int:page_num>/', news_page, name='news-page'),
     path('newsdetail/<int:news_id>/', news_detail, name='news-detail'),
     path('comments/<int:news_id>/', comments_view),
+    path('comment/<int:comment_id>/', views.comment_detail_view, name='comment-detail'),  # PUT, DELETE
     path('analyze/', analyze_news),
+    path('like/<int:news_id>/', views.toggle_like, name='toggle-like'),
+    path('newsdetail/<int:news_id>/similar/', views.similar_articles, name='similar-articles'),
+    path('likes/', views.liked_articles, name='liked-articles'),
 ]

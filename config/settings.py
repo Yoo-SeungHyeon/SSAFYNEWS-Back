@@ -176,6 +176,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://localhost:5173"
 ]
 
 from corsheaders.defaults import default_headers
