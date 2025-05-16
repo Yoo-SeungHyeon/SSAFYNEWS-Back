@@ -3,13 +3,14 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .models import NewsArticle, View, Like, Comment
-from .serializers import NewsSerializer, NewsDetailSerializer, CommentSerializer
+from .serializers import NewsSerializer, NewsDetailSerializer, CommentSerializer, NewsArticleIndex, SearchNewsSerializer
 from datetime import timedelta
 from django.utils import timezone
 from collections import Counter
 from pgvector.django import CosineDistance
 from django.views.decorators.cache import never_cache
 from django.core.paginator import Paginator
+from elasticsearch_dsl import Q
 
 
 
@@ -262,3 +263,27 @@ def liked_articles(request):
         "page": page,
         "articles": serializer.data,
     }, status=status.HTTP_200_OK)
+    
+    
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def search_view(request):
+    query = request.GET.get('q', '').strip()
+    if not query:
+        return Response({"error": "검색어가 비어있습니다."}, status=400)
+
+    q = Q("multi_match", 
+        query=query,
+        fields=["title^2", "summary"],  # title에 가중치
+        fuzziness="AUTO"  # 유사 검색 허용
+    )
+    s = NewsArticleIndex.search().query(q)[:20]
+    results = s.execute()
+
+    ids = [int(hit.meta.id) for hit in results]
+    articles = NewsArticle.objects.filter(news_id__in=ids)
+    serializer = SearchNewsSerializer(articles, many=True)
+    return Response({
+        "total_results": len(results),
+        "articles": serializer.data
+    })

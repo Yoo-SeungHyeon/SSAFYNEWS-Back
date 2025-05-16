@@ -64,3 +64,65 @@ python manage.py runserver
 
 
 
+## Elastic 단일 컨테이너
+
+```bash
+docker run -d --name elasticsearch \
+  -p 9200:9200 \
+  -e "discovery.type=single-node" \
+  -e "xpack.security.enabled=false" \
+  docker.elastic.co/elasticsearch/elasticsearch:8.12.1
+
+```
+
+
+
+## indexes
+```bash
+python manage.py shell
+```
+
+```python
+from news_api.search_indexes import NewsArticleIndex
+NewsArticleIndex.init()
+```
+
+```python
+
+from elasticsearch import Elasticsearch
+
+es = Elasticsearch("http://localhost:9200")
+
+settings = {
+  "settings": {
+    "analysis": {
+      "tokenizer": {
+        "edge_ngram_tokenizer": {
+          "type": "edge_ngram",
+          "min_gram": 1,
+          "max_gram": 15,
+          "token_chars": ["letter", "digit"]
+        }
+      },
+      "analyzer": {
+        "edge_ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "edge_ngram_tokenizer"
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "title": {"type": "text", "analyzer": "edge_ngram_analyzer"},
+      "summary": {"type": "text", "analyzer": "edge_ngram_analyzer"},
+      "category": {"type": "keyword"},
+      "updated": {"type": "date"}
+    }
+  }
+}
+
+es.indices.create(index="news_articles", body=settings)
+
+
+```
