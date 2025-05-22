@@ -6,7 +6,7 @@ class NewsArticle(models.Model):
     news_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
-    link = models.URLField(unique=True)
+    link = models.URLField(max_length=500, unique=True)
     summary = models.TextField()
     updated = models.DateTimeField()
     full_text = models.TextField(default='')

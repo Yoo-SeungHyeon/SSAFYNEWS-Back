@@ -126,3 +126,8 @@ es.indices.create(index="news_articles", body=settings)
 
 
 ```
+
+
+```
+python manage.py run_indexer_full
+```
