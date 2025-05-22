@@ -12,7 +12,7 @@ class NewsArticle(models.Model):
     full_text = models.TextField(default='')
     category = models.CharField(max_length=255, blank=True, null=True)
     keywords = models.TextField(blank=True, null=True)
-    embedding = VectorField(dimensions=1536, blank=True, null=True)
+    embedding = VectorField(dimensions=768, blank=True, null=True)
 
     def __str__(self):
         return self.title
