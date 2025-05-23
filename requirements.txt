@@ -17,3 +17,4 @@ sqlalchemy
 openai
 feedparser
 elasticsearch-dsl
+sentence_transformers
