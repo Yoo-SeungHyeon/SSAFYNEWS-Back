@@ -14,4 +14,5 @@ urlpatterns = [
     path('newsdetail/<int:news_id>/similar/', views.similar_articles, name='similar-articles'),
     path('likes/', views.liked_articles, name='liked-articles'),
     path('search/', search_view, name='search-news'),
+    path('chatbot/', views.chatbot_response, name='chatbot_response'),
 ]

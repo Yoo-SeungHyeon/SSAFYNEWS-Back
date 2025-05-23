@@ -11,6 +11,43 @@ from pgvector.django import CosineDistance
 from django.views.decorators.cache import never_cache
 from django.core.paginator import Paginator
 from elasticsearch_dsl import Q
+import ollama
+from django.conf import settings # settings.py에서 Ollama 모델 설정을 가져오기 위해
+
+@api_view(['POST'])
+def chatbot_response(request):
+    message = request.data.get('message')
+    context = request.data.get('context', '')
+
+    if not message:
+        return Response({"error": "Message is required."}, status=400)
+
+    prompt = f"""
+    현재 화면 정보: {context}
+
+    사용자 질문: {message}
+
+    위 정보를 바탕으로 답변해주세요.
+    """
+
+    try:
+        response = ollama.chat(
+            model=settings.OLLAMA_MODEL, # Django settings에서 Ollama 모델 이름 사용
+            messages=[
+                {
+                    'role': 'user',
+                    'content': prompt
+                }
+            ]
+        )
+        bot_response = response['message']['content'].strip()
+        return Response({"response": bot_response})
+    except ollama.OllamaAPIError as e:
+        print(f"Ollama API Error: {e}")
+        return Response({"error": "Ollama API error occurred."}, status=500)
+    except Exception as e:
+        print(f"Chatbot Error: {e}")
+        return Response({"error": "An unexpected error occurred."}, status=500)
 
 
 
@@ -70,16 +107,7 @@ def news_page(request, page_num):
     if recommend == 0:
         queryset = queryset.order_by('-updated')
     elif recommend == 1:
-        if not request.user.is_authenticated:
-            return Response({"error": "Authentication required for recommendations"}, status=401)
-
-        recent_view = View.objects.filter(user=request.user).order_by('-viewed_at').first()
-        if not recent_view or not recent_view.news.embedding:
-            return Response({"error": "No recent viewed news or missing embedding"}, status=404)
-
-        base_vector = recent_view.news.embedding
-        queryset = queryset.exclude(pk=recent_view.news.pk)
-        queryset = queryset.annotate(sim=CosineDistance('embedding', base_vector)).order_by('sim')
+        queryset = queryset.order_by('?') # Random ordering
     else:
         return Response({"error": "Invalid recommend flag (0 or 1 only)"}, status=400)
 
