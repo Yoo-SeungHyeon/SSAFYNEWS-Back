@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import news_detail, news_page, comments_view, analyze_news, search_view
+from .views import news_detail, news_page, comments_view, analyze_news, search_view, autocomplete_view
 
 urlpatterns = [
     path('', views.health_check, name='health_check'),
@@ -14,5 +14,6 @@ urlpatterns = [
     path('newsdetail/<int:news_id>/similar/', views.similar_articles, name='similar-articles'),
     path('likes/', views.liked_articles, name='liked-articles'),
     path('search/', search_view, name='search-news'),
+    path('autocomplete/', autocomplete_view, name='autocomplete'),
     path('chatbot/', views.chatbot_response, name='chatbot_response'),
 ]
