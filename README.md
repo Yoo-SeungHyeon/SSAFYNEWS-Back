@@ -2,6 +2,37 @@
 
 AI 기반 뉴스 큐레이션 플랫폼의 Django 백엔드 서버
 
+### 데이터 공유 방법
+```bash
+# 전체 데이터베이스 내보내기
+python manage.py dumpdata > db_backup.json
+
+# 특정 앱의 데이터만 내보내기
+python manage.py dumpdata news_api > news_data.json
+
+# 특정 모델의 데이터만 내보내기
+python manage.py dumpdata news_api.NewsArticle > articles.json
+
+# 사용자 데이터 제외하고 내보내기 (민감 정보 보호)
+python manage.py dumpdata --exclude=auth.user --exclude=sessions > safe_data.json
+
+# 들여쓰기 포함해서 가독성 좋게 내보내기
+python manage.py dumpdata --indent=2 news_api > formatted_news.json
+```
+
+```bash
+# JSON 파일에서 데이터 복원
+python manage.py loaddata db_backup.json
+
+# 여러 파일 동시에 로드
+python manage.py loaddata news_data.json user_data.json
+
+# 특정 경로의 파일 로드
+python manage.py loaddata fixtures/initial_data.json
+```
+
+
+
 ## 📋 개요
 
 이 백엔드는 **Django REST Framework**를 기반으로 하여 AI 기반 뉴스 큐레이션, 개인 맞춤 추천, 지능형 검색, AI 챗봇 등의 핵심 기능을 제공합니다.
