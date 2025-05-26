@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-s@&#j#l5wou1(mxx+tc%frsjq9&z@p@f60p5%ht4mn*s8$ed6i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['backend']
 
 # Application definition
 
@@ -108,11 +108,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-#####---추후 PostgreSQL로 수정하기---#####
+
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'news',  # db_name
+#         'USER': 'ssafynews',  # db_user
+#         'PASSWORD': 'ssafynews13',  # user_pw
+#         'HOST': 'localhost',  # host_ip or domain
+#         'PORT': '5432',  # port
 #     }
 # }
 
@@ -122,11 +126,10 @@ DATABASES = {
         'NAME': 'news',  # db_name
         'USER': 'ssafynews',  # db_user
         'PASSWORD': 'ssafynews13',  # user_pw
-        'HOST': 'localhost',  # host_ip or domain
-        'PORT': '5433',  # port
+        'HOST': 'pgvector_db',  # host_ip or domain
+        'PORT': '5432',  # port
     }
 }
-
 #####------------------------------#####
 
 
@@ -177,7 +180,11 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://localhost",
+    "http://localhost:80",
+    "http://frontend",
+    "http://frontend:80",
 ]
 
 from corsheaders.defaults import default_headers

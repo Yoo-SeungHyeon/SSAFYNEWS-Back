@@ -31,7 +31,7 @@ python manage.py loaddata news_data.json user_data.json
 python manage.py loaddata fixtures/initial_data.json
 ```
 
-
+![ERD](image.png)
 
 ## 📋 개요
 
