@@ -596,8 +596,11 @@ class ChatbotService:
     def _generate_ollama_response(self, prompt):
         """Ollama를 사용한 응답 생성"""
         try:
-            response = ollama.chat(
-                model=settings.OLLAMA_MODEL,
+            # Ollama 클라이언트 설정
+            client = ollama.Client(host=getattr(settings, 'OLLAMA_HOST', 'http://gemma3-ollama:11434'))
+            
+            response = client.chat(
+                model=getattr(settings, 'OLLAMA_MODEL', 'gemma3:1b-it-qat'),
                 messages=[
                     {
                         'role': 'system',
@@ -617,18 +620,19 @@ class ChatbotService:
                 "error": False
             }
             
-        except ollama.OllamaAPIError as e:
-            print(f"Ollama API Error: {e}")
-            return {
-                "response": "AI 서비스에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.",
-                "error": True
-            }
         except Exception as e:
             print(f"Ollama Error: {e}")
-            return {
-                "response": "응답 생성 중 오류가 발생했습니다. 다시 시도해 주세요.",
-                "error": True
-            }
+            # Ollama 연결 오류인지 확인
+            if "connection" in str(e).lower() or "refused" in str(e).lower():
+                return {
+                    "response": "AI 서비스에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.",
+                    "error": True
+                }
+            else:
+                return {
+                    "response": "응답 생성 중 오류가 발생했습니다. 다시 시도해 주세요.",
+                    "error": True
+                }
 
 
 # 편의 함수들
