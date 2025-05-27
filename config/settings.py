@@ -124,9 +124,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'news',  # db_name
-        'USER': 'ssafynews',  # db_user
-        'PASSWORD': 'ssafynews13',  # user_pw
-        'HOST': 'pgvector_db',  # host_ip or domain
+        'USER': 'airflow',  # db_user
+        'PASSWORD': 'airflow',  # user_pw
+        'HOST': 'postgres',  # host_ip or domain
         'PORT': '5432',  # port
     }
 }
