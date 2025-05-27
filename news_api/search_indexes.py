@@ -2,7 +2,7 @@ from elasticsearch_dsl import Document, Text, Keyword, Date
 from elasticsearch_dsl.connections import connections
 from .models import NewsArticle
 
-connections.create_connection(hosts=["http://localhost:9200"])
+connections.create_connection(hosts=["http://elasticsearch:9200"])
 
 class NewsArticleIndex(Document):
     title = Text()

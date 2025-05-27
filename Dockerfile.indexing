@@ -1,0 +1,18 @@
+# Python 3.10 기반 이미지 사용
+FROM python:3.9-slim
+
+# 작업 디렉토리 생성
+WORKDIR /app
+
+# requirements.txt 복사 및 설치
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 앱 소스 복사
+COPY . .
+
+# 포트 노출 (Django runserver 기준)
+EXPOSE 8001
+
+# 마이그레이션 실행 후 Django 개발 서버 실행
+CMD ["sh", "-c", "python manage.py indexing"]

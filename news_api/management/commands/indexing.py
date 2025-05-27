@@ -13,7 +13,7 @@ from elasticsearch import Elasticsearch
 from news_api.models import NewsArticle
 from news_api.search_indexes import NewsArticleIndex
 
-es = Elasticsearch("http://localhost:9200")
+es = Elasticsearch("http://elasticsearch:9200")
 INDEX_NAME = "news_articles"
 
 def create_initial_index():
