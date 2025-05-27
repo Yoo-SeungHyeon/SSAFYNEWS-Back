@@ -14,6 +14,5 @@ COPY . .
 # 포트 노출 (Django runserver 기준)
 EXPOSE 8000
 
-
-# Django 개발 서버 실행 (마이그레이션 포함)
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"] 
+# 마이그레이션 실행 후 Django 개발 서버 실행
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
